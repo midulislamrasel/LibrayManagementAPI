@@ -6,14 +6,17 @@ import {
   deleteBook,
   getBookById,
 } from '../controllers/bookController';
+import { isAdmin } from '../middleware/isAdmin';
 
 const router = express.Router();
 
 router.get('/', getBooks);
 router.get('/:id', getBookById);
-router.post('/', createBook);
-router.put('/:id', updateBook);
-router.delete('/:id', deleteBook);
+
+// Only admins can do the following:
+router.post('/', isAdmin, createBook);
+router.put('/:id', isAdmin, updateBook);
+router.delete('/:id', isAdmin, deleteBook);
 
 export default router;
 

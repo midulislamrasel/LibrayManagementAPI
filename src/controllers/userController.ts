@@ -20,3 +20,17 @@ export const getUsers = async (req:Request, res:Response)=>{
     const users = await User.find();
     res.json(users)
 }
+
+// Get single user
+export const getUserById = async (req: Request, res: Response) => {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  };
+  
+  // Delete user
+  export const deleteUser = async (req: Request, res: Response) => {
+    const deleted = await User.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: 'User not found' });
+    res.json({ message: 'User deleted' });
+  };
