@@ -37,3 +37,34 @@ export const deleteBook = async (req: Request, res: Response) => {
   if (!deleted) return res.status(404).json({ message: 'Book not found' });
   res.json({ message: 'Book deleted' });
 };
+
+// POST comment to a book
+export const addComment = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { user, text } = req.body;
+
+  const book = await Book.findById(id);
+  if (!book) {
+    return res.status(404).json({ message: 'Book not found' });
+  }
+
+  book.comments.push({ user, text });
+  await book.save();
+
+  res.status(201).json({ message: 'Comment added', comments: book.comments });
+};
+
+//getBookComments 
+export const getBookComments = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const book = await Book.findById(id);
+  if (!book) {
+    return res.status(404).json({ message: 'Book not found' });
+  }
+
+  res.json({
+    totalComments: book.comments.length,
+    comments: book.comments
+  });
+};
